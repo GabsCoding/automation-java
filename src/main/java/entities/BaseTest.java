@@ -1,0 +1,26 @@
+package entities;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.BeforeClass;
+
+public class BaseTest {
+    public String url;
+
+    public WebDriver driver;
+
+    private static final String DRIVER_PATH = "src/main/resources/chromedriver.exe";
+
+    private static final String RESOURCE_PATH = "src/main/resources/components.html";
+
+    @BeforeClass
+    public void preCondition() {
+        url = System.getProperty("user.dir") + RESOURCE_PATH;
+
+        System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
+
+        driver = new ChromeDriver();
+        driver.get(url);
+        driver.manage().window().maximize();
+    }
+}
