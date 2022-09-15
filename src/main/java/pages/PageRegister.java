@@ -1,13 +1,14 @@
 package pages;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.Select;
 
-@Getter @Builder
+import java.util.ArrayList;
+import java.util.List;
+
 public class PageRegister extends BasePage {
     @FindBy(id="elementosForm:nome")
     private WebElement textFirstName;
@@ -20,6 +21,9 @@ public class PageRegister extends BasePage {
 
     @FindBy(id="elementosForm:sexo:1")
     private WebElement radioGenderFemale;
+
+//    @FindAll(name="elementosForm:comidaFavorita")
+//    private ArrayList<WebElement> foods;
 
     @FindBy(id="elementosForm:comidaFavorita:0")
     private WebElement checkboxFoodMeat;
@@ -34,10 +38,10 @@ public class PageRegister extends BasePage {
     private WebElement checkboxFoodVegetarian;
 
     @FindBy(id="elementosForm:escolaridade")
-    private WebElement selectSchoolGrade;
+    private Select selectSchoolGrade;
 
     @FindBy(id="elementosForm:esportes")
-    private WebElement selectSports;
+    private Select selectSportsElement;
 
     @FindBy(id="elementosForm:sugestoes")
     private WebElement textAreaSuggestion;
@@ -45,10 +49,46 @@ public class PageRegister extends BasePage {
     @FindBy(id="elementosForm:cadastrar")
     private WebElement buttonRegister;
 
-
-
-
     public PageRegister(WebDriver driver) {
         super(driver);
+    }
+
+    public PageRegister fillFirstName(String firstName) {
+        textFirstName.sendKeys(firstName);
+
+        return this;
+    }
+
+    public PageRegister fillLastName(String lastName) {
+        textLastName.sendKeys(lastName);
+
+        return this;
+    }
+
+    public PageRegister selectGender(int gender)
+    {
+        switch (gender){
+            case 0:
+                radioGenderMale.click();
+                break;
+            case 1:
+                radioGenderFemale.click();
+        }
+
+        return this;
+    }
+
+    public PageRegister selectGrade(String schoolGrade){
+        selectSchoolGrade.selectByVisibleText(schoolGrade);
+
+        return this;
+    }
+
+    public PageRegister selectSports(List<String> sports){
+        for ( String sport : sports) {
+            selectSportsElement.selectByVisibleText(sport);
+        }
+
+        return  this;
     }
 }
