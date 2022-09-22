@@ -22,9 +22,6 @@ public class PageRegister extends BasePage {
     @FindBy(id="elementosForm:sexo:1")
     private WebElement radioGenderFemale;
 
-//    @FindAll(name="elementosForm:comidaFavorita")
-//    private ArrayList<WebElement> foods;
-
     @FindBy(id="elementosForm:comidaFavorita:0")
     private WebElement checkboxFoodMeat;
 
@@ -38,16 +35,25 @@ public class PageRegister extends BasePage {
     private WebElement checkboxFoodVegetarian;
 
     @FindBy(id="elementosForm:escolaridade")
-    private Select selectSchoolGrade;
+    private WebElement selectSchoolGrade;
 
     @FindBy(id="elementosForm:esportes")
-    private Select selectSportsElement;
+    private WebElement selectSportsElement;
 
     @FindBy(id="elementosForm:sugestoes")
     private WebElement textAreaSuggestion;
 
+    @FindBy(partialLinkText="Google")
+    private WebElement linkGoogle;
+
+    @FindBy(linkText="Site do G1")
+    private WebElement linkGlobo;
+
     @FindBy(id="elementosForm:cadastrar")
     private WebElement buttonRegister;
+
+    @FindBy(id="resultado")
+    private WebElement result;
 
     public PageRegister(WebDriver driver) {
         super(driver);
@@ -65,13 +71,32 @@ public class PageRegister extends BasePage {
         return this;
     }
 
-    public PageRegister selectGender(int gender)
+    public PageRegister selectFood(String food) {
+        switch (food) {
+            case "meat":
+                checkboxFoodMeat.click();
+                break;
+            case "chicken":
+                checkboxFoodChicken.click();
+                break;
+            case "pizza":
+                checkboxFoodPizza.click();
+                break;
+            case "vegetarian":
+                checkboxFoodVegetarian.click();
+                break;
+        }
+
+        return this;
+    }
+
+    public PageRegister selectGender(String gender)
     {
         switch (gender){
-            case 0:
+            case "M":
                 radioGenderMale.click();
                 break;
-            case 1:
+            case "F":
                 radioGenderFemale.click();
         }
 
@@ -79,16 +104,55 @@ public class PageRegister extends BasePage {
     }
 
     public PageRegister selectGrade(String schoolGrade){
-        selectSchoolGrade.selectByVisibleText(schoolGrade);
+        Select dropdown = new Select(selectSchoolGrade);
+        dropdown.selectByVisibleText(schoolGrade);
 
         return this;
     }
 
-    public PageRegister selectSports(List<String> sports){
+    public PageRegister selectSports(ArrayList<String> sports){
+        Select dropdown = new Select(selectSportsElement);
+
         for ( String sport : sports) {
-            selectSportsElement.selectByVisibleText(sport);
+            dropdown.selectByVisibleText(sport);
         }
 
         return  this;
+    }
+
+    public PageRegister fillSuggestion(String suggestion) {
+        textAreaSuggestion.sendKeys(suggestion);
+
+        return this;
+    }
+
+    public String clickGoogleLink(){
+        linkGoogle.click();
+
+        String url = driver.getCurrentUrl();
+
+        driver.navigate().back();
+
+        return url;
+    }
+
+    public String clickGloboLink(){
+        linkGlobo.click();
+
+        String title = driver.getTitle();
+
+        driver.navigate().back();
+
+        return title;
+    }
+
+    public PageRegister register() {
+        buttonRegister.click();
+
+        return this;
+    }
+
+    public String getResultText() {
+        return result.getText();
     }
 }
